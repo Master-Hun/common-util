@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches-ignore:
+      - main
+    tags-ignore:
+      - v*
+
+jobs:
+  build:
+    runs-on: [ self-hosted, linux, x64 ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://npm.pkg.github.com/
+          scope: '@bankda'
+        env:
+          NODE_AUTH_TOKEN: ${{secrets._AUTH_TOKEN}}
+      - name: install yarn
+        run: npm i -g yarn
+      - name: yarn install, build, and test
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+          yarn test
+        env:
+          CI: true
+          NODE_AUTH_TOKEN: ${{secrets._AUTH_TOKEN}}

@@ -1,0 +1,38 @@
+name: package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-gp:
+    runs-on: [ self-hosted, linux, x64 ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://npm.pkg.github.com/
+          scope: '@master-hun'
+        env:
+          NODE_AUTH_TOKEN: ${{secrets._AUTH_TOKEN}}
+      - name: install yarn
+        run: npm i -g yarn
+      - name: install
+        run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{secrets._AUTH_TOKEN}}
+      - name: build
+        run: yarn build
+        env:
+          NODE_AUTH_TOKEN: ${{secrets._AUTH_TOKEN}}
+      - name: test
+        run: yarn test
+        env:
+          NODE_AUTH_TOKEN: ${{secrets._AUTH_TOKEN}}
+      - name: publish
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets._AUTH_TOKEN}}
