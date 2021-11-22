@@ -35,18 +35,24 @@ export abstract class BaseType extends Enumify {
  * 사용자 상태 유형
  */
 export class UserStatus extends BaseType {
-  /** 등록 */
-  public static REGISTER = new UserStatus("등록");
-  /** 정상 */
-  public static ACTIVE = new UserStatus("정상");
-  /** 휴면 */
-  public static SUSPEND = new UserStatus("휴면");
-  /** 탈퇴 */
-  public static DELETE = new UserStatus("탈퇴");
+  public static 가입대기 = new UserStatus("r");
+  public static 정상 = new UserStatus("n");
+  public static 이용정지 = new UserStatus("p");
+  public static 탈퇴 = new UserStatus("s");
 
   private static _ = UserStatus.closeEnum();
 }
 
+/**
+ * 관리자 상태 유형
+ */
+ export class AdminUserStatus extends BaseType {
+  public static 정상 = new AdminUserStatus("n");
+  public static 정지 = new AdminUserStatus("p");
+  public static 퇴직 = new AdminUserStatus("s");
+
+  private static _ = AdminUserStatus.closeEnum();
+}
 
 /**
  * 토큰 이벤트 유형

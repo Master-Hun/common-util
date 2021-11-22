@@ -1,5 +1,5 @@
 {
-  "name": "@masterh8887/jwt-token-helper",
+  "name": "duksan-common-util",
   "version": "0.1.1",
   "description": "common module",
   "main": "dist/index.js",
@@ -16,15 +16,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Master-Hun/common-util.git"
+    "url": "git+https://github.com/Master-Hun/duksan-common-util.git"
   },
   "keywords": [],
   "author": "Master-Hun <masterh8887@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Master-Hun/common-util/issues"
+    "url": "https://github.com/Master-Hun/duksan-common-util/issues"
   },
-  "homepage": "https://github.com/Master-Hun/common-util#readme",
+  "homepage": "https://github.com/Master-Hun/duksan-common-util#readme",
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "@types/js-base64": "^3.3.1",
