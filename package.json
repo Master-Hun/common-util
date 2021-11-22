@@ -1,5 +1,5 @@
 {
-  "name": "@master-hun/common-util",
+  "name": "@masterh8887/jwt-token-helper",
   "version": "0.1.1",
   "description": "common module",
   "main": "dist/index.js",
@@ -25,9 +25,6 @@
     "url": "https://github.com/Master-Hun/common-util/issues"
   },
   "homepage": "https://github.com/Master-Hun/common-util#readme",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "@types/js-base64": "^3.3.1",
