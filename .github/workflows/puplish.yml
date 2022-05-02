@@ -8,7 +8,7 @@ on:
       - "*"
 
 jobs:
-  build:
+  publish-npm:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          registry-url: https://registry.npmjs.org/
       - name: install yarn
         run: npm i -g yarn
       - name: install
