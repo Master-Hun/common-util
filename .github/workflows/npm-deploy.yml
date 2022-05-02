@@ -9,26 +9,26 @@ on:
     tags:
       - "*"
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - run: npm install
-      - run: npm test
-
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
       - uses: actions/checkout@v3
+      - name: setup node
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm install
-      - run: npm publish
+      - name: install yarn
+        run: npm i -g yarn
+      - name: install
+        run: yarn install --frozen-lockfile
+      - name: build
+        run: yarn build
+      - name: test
+        run: yarn test
+      - name: publish
+        run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets._NPM_AUTH_TOKEN}}
