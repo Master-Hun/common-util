@@ -1,134 +1,150 @@
 import * as crypto from "crypto";
+import { AuthTokenUserType, RoleType } from "../src/jwt.object";
+import { JwtHelper } from "../src/jwt.helper";
 
-import {
-  JwtHelper,
-  UserType,
-  UserStatus,
-  AuthTokenEventType,
-  CommunicationType,
-  AdminUserStatus,
-} from "../src";
+const helper = new JwtHelper();
+describe("JWT Helper/Object Test", () => {
+  describe("[관리자/MASTER] jwt test", () => {
+    const seq: number = 1;
+    const name: string = "마스터";
+    const email: string = "master@test.com";
+    const role: RoleType = RoleType.MASTER;
+    const ip = "123.222.222.123";
+    const token = createToken(
+      getJwtHeader(),
+      getJwtPayload(seq, name, email, role, ip, 3600)
+    );
 
-describe("JWTHelper Test", () => {
-  const helper = new JwtHelper();
+    const jwt = helper.getJwtObject(token);
+    it("만료기간 검증", () => {
+      expect(jwt.isExpired()).toBeFalsy();
+    });
+    it("만료시간 반환 검증", () => {
+      expect(jwt.getExpired()).toBeDefined();
+    });
 
-  // it("JWT / ReadOnly", () => {
-  //   const token = createToken(
-  //     getJwtHeader(),
-  //     getJwtPayload(
-  //       1,
-  //       "1",
-  //       // String(ManageRole.USER_INFO.read),
-  //       UserType.SYSTEM
-  //     )
-  //   );
-  //   const jo = helper.getJwtObject(token);
-  //   expect(jo.isExpired()).toBeFalsy();
-  //   expect(jo.getExpired() > Date.now()).toBeTruthy();
-  //   expect(jo.getUserSeq()).toBe(1);
-  //   expect(jo.getIp()).toBe("127.0.0.1");
-  //   // expect(jo.hasReadRole(ManageRole.USER_INFO)).toBeTruthy();
-  //   // expect(jo.hasWriteRole(ManageRole.USER_INFO)).toBeFalsy();
-  //   expect(jo.getUserType()).toBe(UserType.SYSTEM);
-  //   expect(jo.getJwtHeader()).not.toBeNull();
-  // });
+    it("고유번호 검증", () => {
+      expect(jwt.getSeq()).toBe(seq);
+    });
 
-  // it("JWT / ReadWrite", () => {
-  //   const token = createToken(
-  //     getJwtHeader(),
-  //     getJwtPayload(
-  //       1,
-  //       "1",
-  //       // String(ManageRole.USER_INFO.read | ManageRole.USER_INFO.write),
-  //       UserType.MANAGE
-  //     )
-  //   );
-  //   const jo = helper.getJwtObject(token);
-  //   expect(jo.isExpired()).toBeFalsy();
-  //   expect(jo.getExpired() > Date.now()).toBeTruthy();
-  //   expect(jo.getUserSeq()).toBe(1);
-  //   expect(jo.getIp()).toBe("127.0.0.1");
-  //   // expect(jo.hasReadRole(ManageRole.USER_INFO)).toBeTruthy();
-  //   // expect(jo.hasWriteRole(ManageRole.USER_INFO)).toBeTruthy();
-  //   // expect(jo.hasReadRole(ManageRole.FACILITY_INFO)).toBeFalsy();
-  //   expect(jo.getUserType()).toBe(UserType.MANAGE);
-  // });
+    it("이름 검증", () => {
+      expect(jwt.getName()).toBe(name);
+    });
 
-  // it("JWT / MasterRole", () => {
-  //   const token = createToken(
-  //     getJwtHeader(),
-  //     getJwtPayload(
-  //       1,
-  //       "1",
-  //       // String(ServiceRole.CONFIG_BASIC_FACILITY.read | ServiceRole.ACCOUNTING_BANKBOOKENTRY.read | ServiceRole.ACCOUNTING_BANKBOOKENTRY.write),
-  //       UserType.MASTER,
-  //       "1,2",
-  //       "1")
-  //   );
-  //   const jo = helper.getJwtObject(token);
-  //   expect(jo.isExpired()).toBeFalsy();
-  //   expect(jo.getExpired() > Date.now()).toBeTruthy();
-  //   expect(jo.getUserSeq()).toBe(1);
-  //   expect(jo.getIp()).toBe("127.0.0.1");
-  //   // expect(jo.hasReadRole(ServiceRole.CONFIG_BASIC_FACILITY)).toBeTruthy();
-  //   // expect(jo.hasWriteRole(ServiceRole.CONFIG_BASIC_FACILITY)).toBeFalsy();
-  //   // expect(jo.hasReadRole(ServiceRole.ACCOUNTING_BANKBOOKENTRY)).toBeTruthy();
-  //   // expect(jo.hasWriteRole(ServiceRole.ACCOUNTING_BANKBOOKENTRY)).toBeTruthy();
-  //   // expect(jo.hasReadRole(ManageRole.FACILITY_INFO)).toBeFalsy();
-  //   // expect(jo.hasWriteRole(ManageRole.FACILITY_INFO)).toBeFalsy();
-  //   // expect(jo.getUserType()).toBe(UserType.SERVICE);
-  // });
+    it("이메일 검증", () => {
+      expect(jwt.getLoginEmail()).toBe(email);
+    });
 
-  // // it("ManageRole", () => {
-  // //   const list = ManageRole.toRoles(ManageRole.enumValues);
-  // //   expect(list.length).toBe(3);
-  // //   console.table(list);
-  // // });
+    it("권한 검증", () => {
+      expect(jwt.getRole()).toBe(role);
+    });
 
-});
+    it("사용자 유형 검증", () => {
+      expect(jwt.getUserType()).toBe(AuthTokenUserType.ADMIN);
+    });
 
-describe("Enum Test", () => {
-  it("UserStatusType", () => {
-    const list = UserStatus.toBaseTypes(UserStatus.enumValues);
-    expect(list.length).toBe(4);
-    expect(UserStatus.가입대기.name).toBe("r");
-    expect(UserStatus.정상.name).toBe("n");
-    expect(UserStatus.이용정지.name).toBe("p");
-    expect(UserStatus.탈퇴.name).toBe("s");
-    expect(list[0].description).toBe(undefined); //
-    console.table(list);
-  });
-  it("AdminUserStatusType", () => {
-    const list = AdminUserStatus.toBaseTypes(AdminUserStatus.enumValues);
-    expect(list.length).toBe(3);
-    expect(AdminUserStatus.정상.name).toBe("n");
-    expect(AdminUserStatus.정지.name).toBe("p");
-    expect(AdminUserStatus.퇴직.name).toBe("s");
-    expect(list[0].description).toBe(undefined); //
-    console.table(list);
+    it("IP 검증", () => {
+      expect(jwt.getIp()).toBe(ip);
+    });
   });
 
-  it("AuthTokenEventType", () => {
-    const list = AuthTokenEventType.toBaseTypes(AuthTokenEventType.enumValues);
-    expect(list.length).toBe(4);
-    expect(AuthTokenEventType.CREATE.name).toBe("토큰생성");
-    expect(AuthTokenEventType.UPDATE.name).toBe("토큰업데이트");
-    expect(AuthTokenEventType.EXPIRE.name).toBe("토큰만료");
-    expect(AuthTokenEventType.DELETE.name).toBe("토큰삭제");
-    expect(list[0].description).toBe(undefined); //
-    console.table(list);
+  describe("[관리자/MANAGER] JWT Test", () => {
+    const seq: number = 2;
+    const name: string = "매니저";
+    const email: string = "manager@test.com";
+    const role: RoleType = RoleType.MANAGER;
+    const ip = "123.123.211.211";
+
+    const token = createToken(
+      getJwtHeader(),
+      getJwtPayload(seq, name, email, role, ip, 3600)
+    );
+
+    const jwt = helper.getJwtObject(token);
+
+    it("header 검증", () => {
+      expect(jwt.getJwtHeader()).toBeDefined();
+    });
+
+    it("payload 검증", () => {
+      expect(jwt.getPayload()).toBeDefined();
+    });
+
+    it("만료기간 검증", () => {
+      expect(jwt.isExpired()).toBeFalsy();
+    });
+
+    it("고유번호 검증", () => {
+      expect(jwt.getSeq()).toBe(seq);
+    });
+
+    it("이름 검증", () => {
+      expect(jwt.getName()).toBe(name);
+    });
+
+    it("이메일 검증", () => {
+      expect(jwt.getLoginEmail()).toBe(email);
+    });
+
+    it("권한 검증", () => {
+      expect(jwt.getRole()).toBe(role);
+    });
+
+    it("사용자 유형 검증", () => {
+      expect(jwt.getUserType()).toBe(AuthTokenUserType.ADMIN);
+    });
+
+    it("IP 검증", () => {
+      expect(jwt.getIp()).toBe(ip);
+    });
   });
 
+  describe("[회원/USER] jwt test", () => {
+    const seq: number = 1;
+    const name: string = "사용자";
+    const email: string = "user@test.com";
+    const role: RoleType = RoleType.USER;
+    const ip = "123.123.123.123";
 
-  it("CommunicationType", () => {
-    const list = CommunicationType.toBaseTypes(CommunicationType.enumValues);
-    expect(list.length).toBe(3);
-    expect(CommunicationType.NOTICE.name).toBe("공지");
-    expect(CommunicationType.ALARM.name).toBe("알림");
-    expect(CommunicationType.QUESTION.name).toBe("문의");
-    console.table(list);
+    const token = createToken(
+      getJwtHeader(),
+      getJwtPayload(seq, name, email, role, ip, 3600)
+    );
+
+    const jwt = helper.getJwtObject(token);
+
+    it("만료기간 검증", () => {
+      expect(jwt.isExpired()).toBeFalsy();
+    });
+
+    it("고유번호 검증", () => {
+      expect(jwt.getSeq()).toBe(seq);
+    });
+
+    it("이름 검증", () => {
+      expect(jwt.getName()).toBe(name);
+    });
+
+    it("이메일 검증", () => {
+      expect(jwt.getLoginEmail()).toBe(email);
+    });
+
+    it("이메일 검증", () => {
+      expect(jwt.getLoginEmail()).toBe(email);
+    });
+
+    it("권한 검증", () => {
+      expect(jwt.getRole()).toBe(role);
+    });
+
+    it("사용자 유형 검증", () => {
+      expect(jwt.getUserType()).toBe(AuthTokenUserType.USER);
+    });
+
+    it("IP 검증", () => {
+      expect(jwt.getIp()).toBe(ip);
+    });
   });
-
 });
 
 function createToken(header: any, payload: any) {
@@ -158,21 +174,30 @@ function getJwtHeader() {
   };
 }
 
+/**
+ * JWT Payload를 가져온다.
+ * @param s 운영자/회원 번호
+ * @param n 운영자/회원 이름
+ * @param e 로그인아이디(이메일)
+ * @param r 권한
+ * @param ip 요청 IP
+ * @param timeout 토큰유효시간 (초)
+ */
 function getJwtPayload(
-  userId: number,
-  userRole: string,
-  ut: string,
-  brs?: string,
-  fid?: string,
+  s: number,
+  n: string,
+  e: string,
+  r: RoleType,
+  ip: string,
+  timeout: number
 ) {
   return {
-    iss: "jangbuda",
-    exp: String(Date.now() + 60 * 60 * 1000), // 1hour
-    uid: String(userId),
-    urs: userRole,
-    ip: "127.0.0.1",
-    ut,
-    brs,
-    fid,
+    iss: "test",
+    exp: String(Date.now() + timeout * 60 * 1000),
+    e,
+    n,
+    r,
+    s: String(s),
+    ip,
   };
 }

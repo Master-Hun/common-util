@@ -20,35 +20,55 @@ npm i -S @masterh8887/duksan-common-util
 import { JwtHelper } from "@masterh8887/duksan-common-util";
 
 const helper = new JwtHelper();
-const jwtObject = helper.getJwtObject(accessToken);
+const jwt = helper.getJwtObject(accessToken);
 ```
 
-* 억세스 토큰이 만료되었는지 여부
+- 억세스 토큰이 만료되었는지 여부
 
 ```typescript
-jwtObject.isExpired();
+jwt.isExpired();
 ```
 
-* 관리자/고객 번호
+- 관리자/고객 번호
 
 ```typescript
-jwtObject.getUserSeq();
+jwt.getSeq();
 ```
 
-* 접속 IP 주소
+- 관리자/고객 이름
 
 ```typescript
-jwtObject.getIp();
+jwt.getName();
 ```
 
-* 사용자 유형
+- 관리자/고객 접속 이메일
 
 ```typescript
-jwtObject.getUserType();
+jwt.getLoginEmail();
+```
 
-UserType.SYSTEM;    // 사용자 유형 (시스템) : react에서 미사용
-UserType.MASTER    // 사용자 유형 (최고 관리자) : 최고 관리자 권한
-UserType.MANAGE     // 사용자 유형 (관리자) : 관리자 권한
-UserType.CUSTOMER   // 사용자 유형 (고객) : 고객 권한
+- 사용자 권한
 
+```typescript
+jwt.getRole();
+
+RoleType.SYSTEM; // 시스템 권한
+RoleType.MASTER; // 최고관리자 권한
+RoleType.MANAGER; // 매니저 권한
+RoleType.USER; // 회원권한
+```
+
+- 사용자 유형
+
+```typescript
+jwt.getUserType();
+
+AuthTokenUserType.ADMIN; // 사용자 유형 (관리자)
+AuthTokenUserType.USER; // 사용자 유형 (회원)
+```
+
+- 접속 IP 주소
+
+```typescript
+jwt.getIp();
 ```
