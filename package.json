@@ -27,7 +27,6 @@
   "homepage": "https://github.com/mansterh8887/duksan-common-util#readme",
   "devDependencies": {
     "@types/jest": "^27.4.0",
-    "@types/js-base64": "^3.3.1",
     "@types/node": "^17.0.8",
     "jest": "^27.3.1",
     "rimraf": "^3.0.2",
