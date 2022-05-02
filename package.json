@@ -1,7 +1,7 @@
 {
   "name": "duksan-common-util",
   "version": "0.1.2",
-  "description": "common module",
+  "description": "duksan common module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -34,7 +34,6 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "enumify": "^2.0.0",
     "js-base64": "^3.7.2"
   }
 }
