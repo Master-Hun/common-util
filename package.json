@@ -1,6 +1,6 @@
 {
   "name": "duksan-common-util",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "duksan common module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
