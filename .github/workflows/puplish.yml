@@ -28,3 +28,7 @@ jobs:
       - if: ${{ failure() }}
         run: |
           exit 1
+      - name: publish
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets._NPM_AUTH_TOKEN}}
