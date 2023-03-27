@@ -1,21 +1,25 @@
 import * as crypto from "crypto";
-import { AuthTokenUserType, RoleType } from "../src/jwt.object";
+import { AuthTokenUserType, JwtPayload, RoleType } from "../src/jwt.object";
 import { JwtHelper } from "../src/jwt.helper";
 
-const helper = new JwtHelper();
+const timeout = 1;
+const jwtHelper = new JwtHelper();
+const hedaer = getJwtHeader();
 describe("JWT Helper/Object Test", () => {
   describe("[관리자/MASTER] jwt test", () => {
-    const seq: number = 1;
-    const name: string = "마스터";
-    const email: string = "master@test.com";
-    const role: RoleType = RoleType.MASTER;
-    const ip = "123.222.222.123";
-    const token = createToken(
-      getJwtHeader(),
-      getJwtPayload(seq, name, email, role, ip, 3600)
-    );
+    const payload: JwtPayload = {
+      iss: "test",
+      exp: String(Date.now() + timeout * 60 * 1000),
+      s: 1,
+      n: "마스터",
+      e: "master@test.com",
+      r: RoleType.MANAGER,
+      ip: "123.222.222.211",
+    };
 
-    const jwt = helper.getJwtObject(token);
+    const token = createToken(hedaer, payload);
+    const jwt = jwtHelper.getJwtObject(token);
+
     it("만료기간 검증", () => {
       expect(jwt.isExpired()).toBeFalsy();
     });
@@ -24,19 +28,19 @@ describe("JWT Helper/Object Test", () => {
     });
 
     it("고유번호 검증", () => {
-      expect(jwt.getSeq()).toBe(seq);
+      expect(jwt.getSeq()).toBe(payload.s);
     });
 
     it("이름 검증", () => {
-      expect(jwt.getName()).toBe(name);
+      expect(jwt.getName()).toBe(payload.n);
     });
 
     it("이메일 검증", () => {
-      expect(jwt.getLoginEmail()).toBe(email);
+      expect(jwt.getLoginEmail()).toBe(payload.e);
     });
 
     it("권한 검증", () => {
-      expect(jwt.getRole()).toBe(role);
+      expect(jwt.getRole()).toBe(payload.r);
     });
 
     it("사용자 유형 검증", () => {
@@ -44,23 +48,23 @@ describe("JWT Helper/Object Test", () => {
     });
 
     it("IP 검증", () => {
-      expect(jwt.getIp()).toBe(ip);
+      expect(jwt.getIp()).toBe(payload.ip);
     });
   });
 
   describe("[관리자/MANAGER] JWT Test", () => {
-    const seq: number = 2;
-    const name: string = "매니저";
-    const email: string = "manager@test.com";
-    const role: RoleType = RoleType.MANAGER;
-    const ip = "123.123.211.211";
+    const payload: JwtPayload = {
+      iss: "test",
+      exp: String(Date.now() + timeout * 60 * 1000),
+      s: 2,
+      n: "매니저",
+      e: "manager@test.com",
+      r: RoleType.MANAGER,
+      ip: "123.123.123.211",
+    };
 
-    const token = createToken(
-      getJwtHeader(),
-      getJwtPayload(seq, name, email, role, ip, 3600)
-    );
-
-    const jwt = helper.getJwtObject(token);
+    const token = createToken(hedaer, payload);
+    const jwt = jwtHelper.getJwtObject(token);
 
     it("header 검증", () => {
       expect(jwt.getJwtHeader()).toBeDefined();
@@ -75,19 +79,19 @@ describe("JWT Helper/Object Test", () => {
     });
 
     it("고유번호 검증", () => {
-      expect(jwt.getSeq()).toBe(seq);
+      expect(jwt.getSeq()).toBe(payload.s);
     });
 
     it("이름 검증", () => {
-      expect(jwt.getName()).toBe(name);
+      expect(jwt.getName()).toBe(payload.n);
     });
 
     it("이메일 검증", () => {
-      expect(jwt.getLoginEmail()).toBe(email);
+      expect(jwt.getLoginEmail()).toBe(payload.e);
     });
 
     it("권한 검증", () => {
-      expect(jwt.getRole()).toBe(role);
+      expect(jwt.getRole()).toBe(payload.r);
     });
 
     it("사용자 유형 검증", () => {
@@ -95,46 +99,42 @@ describe("JWT Helper/Object Test", () => {
     });
 
     it("IP 검증", () => {
-      expect(jwt.getIp()).toBe(ip);
+      expect(jwt.getIp()).toBe(payload.ip);
     });
   });
 
   describe("[회원/USER] jwt test", () => {
-    const seq: number = 1;
-    const name: string = "사용자";
-    const email: string = "user@test.com";
-    const role: RoleType = RoleType.USER;
-    const ip = "123.123.123.123";
+    const payload: JwtPayload = {
+      iss: "test",
+      exp: String(Date.now() + timeout * 60 * 1000),
+      s: 1,
+      n: "사용자",
+      e: "user@test.com",
+      r: RoleType.USER,
+      ip: "123.123.123.123",
+    };
 
-    const token = createToken(
-      getJwtHeader(),
-      getJwtPayload(seq, name, email, role, ip, 3600)
-    );
-
-    const jwt = helper.getJwtObject(token);
+    const token = createToken(hedaer, payload);
+    const jwt = jwtHelper.getJwtObject(token);
 
     it("만료기간 검증", () => {
       expect(jwt.isExpired()).toBeFalsy();
     });
 
     it("고유번호 검증", () => {
-      expect(jwt.getSeq()).toBe(seq);
+      expect(jwt.getSeq()).toBe(payload.s);
     });
 
     it("이름 검증", () => {
-      expect(jwt.getName()).toBe(name);
+      expect(jwt.getName()).toBe(payload.n);
     });
 
     it("이메일 검증", () => {
-      expect(jwt.getLoginEmail()).toBe(email);
-    });
-
-    it("이메일 검증", () => {
-      expect(jwt.getLoginEmail()).toBe(email);
+      expect(jwt.getLoginEmail()).toBe(payload.e);
     });
 
     it("권한 검증", () => {
-      expect(jwt.getRole()).toBe(role);
+      expect(jwt.getRole()).toBe(payload.r);
     });
 
     it("사용자 유형 검증", () => {
@@ -142,7 +142,7 @@ describe("JWT Helper/Object Test", () => {
     });
 
     it("IP 검증", () => {
-      expect(jwt.getIp()).toBe(ip);
+      expect(jwt.getIp()).toBe(payload.ip);
     });
   });
 });
@@ -171,33 +171,5 @@ function getJwtHeader() {
   return {
     alg: "HS256",
     typ: "JWT",
-  };
-}
-
-/**
- * JWT Payload를 가져온다.
- * @param s 운영자/회원 번호
- * @param n 운영자/회원 이름
- * @param e 로그인아이디(이메일)
- * @param r 권한
- * @param ip 요청 IP
- * @param timeout 토큰유효시간 (초)
- */
-function getJwtPayload(
-  s: number,
-  n: string,
-  e: string,
-  r: RoleType,
-  ip: string,
-  timeout: number
-) {
-  return {
-    iss: "test",
-    exp: String(Date.now() + timeout * 60 * 1000),
-    e,
-    n,
-    r,
-    s: String(s),
-    ip,
   };
 }

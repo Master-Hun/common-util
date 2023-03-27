@@ -1,14 +1,14 @@
 /**
  * 사용자 유형.
- * - SYSTEM : 시스템 (시스템)
- * - MASTER : 서비스 (최고 관리자)
- * - MANAGE : 운영자 (서비스 관리자)
- * - USER : 고객 (서비스 이용자)
  */
 export enum RoleType {
+  /** 시스템 */
   SYSTEM = "system",
+  /** 최고 관리자 */
   MASTER = "master",
+  /** 서비스 관리자 */
   MANAGER = "manager",
+  /** 고객 */
   USER = "user",
 }
 
@@ -22,23 +22,20 @@ export interface JwtHeader {
   typ: string;
 }
 
-/**
- * JWT Payload.
- * - iss :
- * - exp : 토큰 만료시간 (unix time 포맷)
- * - s : 운영자/회원 번호 (seq)
- * - n : 운영자/회원 이름 (name)
- * - r : 권한
- * - e : 로그인아이디 (email)
- * - ip : 접속 IP 주소
- */
 export interface JwtPayload {
+  /** iss 생성 */
   iss: string;
+  /** 토큰 만료시간 (unix time 포맷) */
   exp: string;
-  s: string;
+  /** 운영자/회원 번호 (seq) */
+  s: number;
+  /** 운영자/회원 이름 (name) */
   n: string;
+  /** 권한 */
   r: RoleType;
+  /** 이메일 */
   e: string;
+  /** 접속 IP 주소 */
   ip: string;
 }
 
@@ -78,7 +75,7 @@ export class JwtObject {
    * @returns 운영자/회원 번호 (숫자)
    */
   public getSeq(): number {
-    return Number(this.payload.s);
+    return this.payload.s;
   }
 
   /**

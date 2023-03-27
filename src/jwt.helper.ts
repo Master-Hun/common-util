@@ -1,5 +1,3 @@
-import { Base64 } from "js-base64";
-
 import { JwtObject, JwtHeader, JwtPayload } from "./jwt.object";
 
 /**
@@ -19,11 +17,11 @@ export class JwtHelper {
 
   /**
    * Base64 디코딩한다.
-   * @param {string} input 입력 데이터 (Base64 문자열)
+   * @param {string} base64 입력 데이터 (Base64 문자열)
    * @returns Base64 디코딩 문자열
    */
-  protected base64Decode(input: string) {
-    return Base64.decode(input);
+  protected base64Decode(base64: string) {
+    return Buffer.from(base64, "base64").toString("utf8");
   }
 
   /**
@@ -34,21 +32,4 @@ export class JwtHelper {
   protected base64UrlToBase64(base64url: string) {
     return base64url.replace(/\-/g, "+").replace(/_/g, "/");
   }
-  // /**
-  //  * Base64 규격을 Base64 URL 규격으로 변경한다.
-  //  * @param {string} base64 Base64 문자열
-  //  * @returns base64url URL 문자열
-  //  */
-  // private base64ToBase64Url(base64: string) {
-  //   return base64.replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
-  // }
-
-  // /**
-  //  * Base64 인코딩한다.
-  //  * @param {string} input 입력 데이터 (Base64 문자열)
-  //  * @returns Base64 인코딩 문자열
-  //  */
-  // private base64Encode(input: string) {
-  //   return Buffer.from(input).toString("base64");
-  // }
 }

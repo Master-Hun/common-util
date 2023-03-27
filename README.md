@@ -11,13 +11,14 @@
 ### 설치
 
 ```bash
-npm i -S @masterh8887/duksan-common-util
+npm i duksan-common-util
+yarn add duksan-common-util
 ```
 
 ### JWT 기본 사용법
 
 ```typescript
-import { JwtHelper } from "@masterh8887/duksan-common-util";
+import { JwtHelper } from "duksan-common-util";
 
 const helper = new JwtHelper();
 const jwt = helper.getJwtObject(accessToken);
